@@ -18,7 +18,9 @@ class PMC():
 	def convert(self, ids, to_idtype):
 		
 		''' Query Pubmed's ID Converter API to convert ids.
-		Breaks list of ids in batches of (up to) 200 queries every second (= max allowed per request).
+		Breaks list of ids in batches of (up to) 200 queries every second.
+			(max 3 requests per second allowed without API key,
+			more info at https://ncbiinsights.ncbi.nlm.nih.gov/2017/11/02/new-api-keys-for-the-e-utilities/).
 		API service should be able to autodect format of ids passed.
 		
 		Documentation: https://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/
@@ -62,6 +64,7 @@ class PMC():
 	def get_citations(self, ids, how):
 		
 		''' Query PMC with PubMed IDs to retrieve a list of PubMed IDs citing the queried IDs.
+		Breaks list of ids in batches of (up to) 200 queries every second.
 		
 		Documentation: https://www.ncbi.nlm.nih.gov/pmc/tools/cites-citedby/
 		
@@ -104,6 +107,7 @@ class PMC():
 				cited_id = linkset.find('idlist').find('id').contents[0]
 				citing_ids = [link.contents for link in linkset.find('linksetdb').find_all('id')]
 				results[cited_id] = citing_ids
+			sleep(1)
 			
 		return results
 		
