@@ -35,20 +35,20 @@ class PMC():
 		Returns:
 		--------
 		dict of converted ids
-		- keys: query ids (strings)
+		- keys: queried ids (strings)
 		- values: converted ids (strings)
 		
 		'''
 		
-		base_query = '?ids='
+		service_root = 'https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/?ids='
 		results = {}
 		
 		for i in range(0, len(ids), 200):
 			chunk = ids[i:i+200]
-			query = '{}{}{}&tool={}&email={}'.format(self.service_root, base_query, ','.join(chunk), self.tool, self.mail)
+			query = '{}{}&tool={}&email={}'.format(service_root, ','.join(chunk), self.tool, self.mail)
 
 			r = requests.get(query)
-			soup = BS(r.text, "lxml")
+			soup = BS(r.text, 'lxml')
 			records = soup.find_all('record')
 			for record in records:
 				query_id = record['requested-id']
@@ -57,15 +57,64 @@ class PMC():
 			sleep(1)
 			
 		return results
-	
 
-class EUtils():
-	
-	def __init__(self):
+
+	def get_citations(self, ids, how):
 		
-		self.service_root = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
+		''' Query PMC with PubMed IDs to retrieve a list of PubMed IDs citing the queried IDs.
+		
+		Documentation: https://www.ncbi.nlm.nih.gov/pmc/tools/cites-citedby/
+		
+		Arguments:
+		----------
+		ids:
+		- type: list of string(s)
+		- description: list of PubMed identifiers to find citing papers for
+		how:
+		- type: string, either 'citing' or 'cited_by'
+		- description:
+			if 'citing': returns all PubMed IDs of papers citing the queried ids in PMC
+			if 'cited_by': returns all PubMed IDs of papers cited by the queried ids in PMC
+		
+		Returns:
+		--------
+		dict of citing papers
+		- keys: queried PubMed identifiers (strings)
+		- values: list of strings, with each string a PubMed identifiers citing the PubMed ID in the associated key
+		
+		'''
+		
+		if how == 'citing':
+			service_root = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&linkname=pubmed_pubmed_citedin&id='
+		elif how == 'cited_by':
+			service_root = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&linkname=pubmed_pubmed_refs&id='
+		else:
+			raise ValueError('Please choose either:\n-citing\ncited_by')
+			
+		results = {}
+		
+		for i in range(0, len(ids), 200):
+			chunk = ids[i:i+200]
+			query = '{}{}&tool={}&email={}'.format(service_root, '&id='.join(chunk), self.tool, self.mail)
+			
+			r = requests.get(query)
 
+			soup = BS(r.text, 'lxml')
+			for linkset in soup.find_all('linkset'):
+				cited_id = linkset.find('idlist').find('id').contents[0]
+				citing_ids = [link.contents for link in linkset.find('linksetdb').find_all('id')]
+				results[cited_id] = citing_ids
+			
+		return results
+		
+		
 if __name__ == '__main__':
 	
-	converter = PubmedIDConverter()
-	print(converter.convert(['21876726', '21876725', '30202444'], 'doi'))
+	mail = 'nicolas.deneuter@uantwerpen.be'
+	
+	pmc = PMC(mail)
+	
+	converted_ids = list(pmc.convert(['PMC4364064', 'PMC5811185'], 'pmid').values())
+	
+	print(pmc.get_citations(converted_ids, how='citing'))
+	print(pmc.get_citations(converted_ids, how='cited_by'))
