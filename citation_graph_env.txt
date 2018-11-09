@@ -2,25 +2,12 @@
 #
 asn1crypto                0.24.0                   py35_0  
 beautifulsoup4            4.6.3                    py35_0  
-biopython                 1.72             py35h830ac7b_0  
-blas                      1.0                         mkl  
 ca-certificates           2018.03.07                    0  
 certifi                   2018.8.24                py35_1  
 cffi                      1.11.5           py35h74b6da3_1  
 chardet                   3.0.4                    py35_1  
 cryptography              2.3.1            py35h74b6da3_0  
-icc_rt                    2017.0.4             h97af966_0  
 idna                      2.7                      py35_0  
-intel-openmp              2019.0                      118  
-libiconv                  1.15                 h1df5818_7  
-libxml2                   2.9.8                hadb2253_1  
-libxslt                   1.1.32               hf6f1972_0  
-lxml                      4.2.5            py35hef2cd61_0  
-mkl                       2019.0                      118  
-mkl_fft                   1.0.6            py35hdbbee80_0  
-mkl_random                1.0.1            py35h77b88f5_1  
-numpy                     1.15.2           py35ha559c80_0  
-numpy-base                1.15.2           py35h8128ebf_0  
 openssl                   1.0.2p               hfa6e2cd_0  
 pip                       10.0.1                   py35_0  
 pycparser                 2.19                     py35_0  
@@ -36,4 +23,3 @@ vs2015_runtime            14.15.26706          h3a45250_0
 wheel                     0.31.1                   py35_0  
 win_inet_pton             1.0.1                    py35_1  
 wincertstore              0.2              py35hfebbdb8_0  
-zlib                      1.2.11               h8395fce_2  
