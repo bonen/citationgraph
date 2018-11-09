@@ -105,7 +105,7 @@ class PMC():
 			soup = BS(r.text, 'lxml')
 			for linkset in soup.find_all('linkset'):
 				cited_id = linkset.find('idlist').find('id').contents[0]
-				citing_ids = [link.contents for link in linkset.find('linksetdb').find_all('id')]
+				citing_ids = [link.contents[0] for link in linkset.find('linksetdb').find_all('id')]
 				results[cited_id] = citing_ids
 			sleep(1)
 			
