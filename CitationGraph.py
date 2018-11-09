@@ -92,7 +92,7 @@ class PMC():
 		elif how == 'cited_by':
 			service_root = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&linkname=pubmed_pubmed_refs&id='
 		else:
-			raise ValueError('Please choose either:\n-citing\ncited_by')
+			raise ValueError('Wrong or missing argument for \'how\', please choose between: \'citing\', \'cited_by\'')
 			
 		results = {}
 		
