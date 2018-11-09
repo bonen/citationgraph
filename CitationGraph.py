@@ -7,41 +7,10 @@ import requests
 from bs4 import BeautifulSoup as BS
 
 
-class Library():
+class PMC():
 	
-	''' Collection of papers '''
-	
-	def __index__(self):
+	def __init__(self, mail):
 		
-		pass
-	
-
-	
-class Paper():
-	
-	''' One research paper '''
-	
-	def __init__(self, doi):
-		
-		pass
-	
-
-
-class Graph():
-	
-	''' Citation graph '''
-	
-	def __init__(self):
-		
-		pass
-	
-
-
-class PubmedIDConverter():
-	
-	def __init__(self, mail='nicolas.deneuter@uantwerpen.be'):
-		
-		self.service_root = 'https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/'
 		self.tool = 'CitationGraph'
 		self.mail = mail
 
