@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup as BS
 
 class PMC():
 	
+	''' PubMed Central interface '''
+	
 	def __init__(self, mail):
 		
 		self.tool = 'CitationGraph'
@@ -114,11 +116,11 @@ class PMC():
 		
 if __name__ == '__main__':
 	
-	mail = 'nicolas.deneuter@uantwerpen.be'
+	mail = 'ex.ample@university.be' # your e-mail adres here
 	
-	pmc = PMC(mail)
+	pmc = PMC(mail) # create PubMed Central interface
 	
-	converted_ids = list(pmc.convert(['PMC4364064', 'PMC5811185'], 'pmid').values())
+	converted_ids = list(pmc.convert(['PMC4364064', 'PMC5811185'], 'pmid').values()) # convert PubMed Central ids to PubMed IDs
 	
-	print(pmc.get_citations(converted_ids, how='citing'))
-	print(pmc.get_citations(converted_ids, how='cited_by'))
+	print(pmc.get_citations(converted_ids, how='citing')) # fetch papers citing the ids we provided
+	print(pmc.get_citations(converted_ids, how='cited_by')) # fetch papers cited by the ids we provided
