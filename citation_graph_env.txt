@@ -1,4 +1,4 @@
-# packages in environment at C:\Users\GITGUDPC\AppData\Local\conda\conda\envs\citation_graph:
+# packages in environment
 #
 asn1crypto                0.24.0                   py35_0  
 beautifulsoup4            4.6.3                    py35_0  
@@ -8,6 +8,10 @@ cffi                      1.11.5           py35h74b6da3_1
 chardet                   3.0.4                    py35_1  
 cryptography              2.3.1            py35h74b6da3_0  
 idna                      2.7                      py35_0  
+libiconv                  1.15                 h1df5818_7  
+libxml2                   2.9.8                hadb2253_1  
+libxslt                   1.1.32               hf6f1972_0  
+lxml                      4.2.5            py35hef2cd61_0  
 openssl                   1.0.2p               hfa6e2cd_0  
 pip                       10.0.1                   py35_0  
 pycparser                 2.19                     py35_0  
@@ -23,3 +27,4 @@ vs2015_runtime            14.15.26706          h3a45250_0
 wheel                     0.31.1                   py35_0  
 win_inet_pton             1.0.1                    py35_1  
 wincertstore              0.2              py35hfebbdb8_0  
+zlib                      1.2.11               h8395fce_2  
