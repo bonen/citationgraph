@@ -203,13 +203,14 @@ class PMC():
 		
 if __name__ == '__main__':
 	
-	mail = 'ex.ample@university.be' # your e-mail adres here
+	mail =  # your e-mail adres here
 	
-	ids = ['PMC4364064', 'PMC5811185']
+	ids = ['PMC4364064', 'PMC5811185'] # list of pubmed central ids
 	pmc = PMC(mail) # create PubMed Central interface
 	
 	converted_ids = list(pmc.convert(ids, 'pmid').values()) # convert PubMed Central ids to PubMed IDs
 	
 	print(pmc.get_citations(converted_ids, how='citing')) # fetch papers citing the ids we provided
 	print(pmc.get_citations(converted_ids, how='cited_by')) # fetch papers cited by the ids we provided
-	mypaper = Paper(ids[0])
+	mypaper = Paper(ids[0])
+	
