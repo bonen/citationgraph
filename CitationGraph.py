@@ -7,6 +7,15 @@ import requests
 from bs4 import BeautifulSoup as BS
 
 
+class Paper():
+	
+	''' Paper in PubMed Central '''
+	
+	def __init__(self, pmcid):
+		
+		self.pmcid = pmcid
+		
+		
 class PMC():
 	
 	''' PubMed Central interface '''
@@ -15,10 +24,11 @@ class PMC():
 		
 		self.tool = 'CitationGraph'
 		self.mail = mail
+		
 		self._chunk_size = 200
 		self._sleep_time = 1
-
-
+		
+		
 	def convert(self, ids, to_idtype):
 		
 		''' Query Pubmed's ID Converter API to convert ids.
@@ -120,9 +130,11 @@ if __name__ == '__main__':
 	
 	mail = 'ex.ample@university.be' # your e-mail adres here
 	
+	ids = ['PMC4364064', 'PMC5811185']
 	pmc = PMC(mail) # create PubMed Central interface
 	
-	converted_ids = list(pmc.convert(['PMC4364064', 'PMC5811185'], 'pmid').values()) # convert PubMed Central ids to PubMed IDs
+	converted_ids = list(pmc.convert(ids, 'pmid').values()) # convert PubMed Central ids to PubMed IDs
 	
 	print(pmc.get_citations(converted_ids, how='citing')) # fetch papers citing the ids we provided
 	print(pmc.get_citations(converted_ids, how='cited_by')) # fetch papers cited by the ids we provided
+	mypaper = Paper(ids[0])
