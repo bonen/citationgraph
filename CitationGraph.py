@@ -212,5 +212,10 @@ if __name__ == '__main__':
 	
 	print(pmc.get_citations(converted_ids, how='citing')) # fetch papers citing the ids we provided
 	print(pmc.get_citations(converted_ids, how='cited_by')) # fetch papers cited by the ids we provided
-	mypaper = Paper(ids[0])
+	
+	for paper_id in ids:
+		mypaper = Paper(paper_id) # create a representation of a paper
+		mypaper.fetch_metadata(pmc) # pass pmc interface to fetch the paper's metadata
+		print(mypaper.metadata['Title'])
+		print(mypaper.metadata['Author'])
 	
