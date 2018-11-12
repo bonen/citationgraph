@@ -16,6 +16,48 @@ class Paper():
 		self.pmcid = pmcid
 		
 		
+	def fetch_metadata(self, pmc):
+		
+		''' Query PubMed Central for a summary of metadata information for this paper.
+		
+		Arguments:
+		----------
+		pmc
+		- type: PMC object
+		- description: PubMed Central interface
+		
+		Returns:
+		--------
+		dict that is also stored as a new attribute 'metadata'
+		- keys: metadata tag names (eg: Author, Title, ...)
+		- values: information associated with the tag for this paper
+			if a tag only has one value, it is stored as a string
+			if a tag has multiple values, they are stored as a list of strings
+		
+		'''
+		
+		soup = pmc._get_metadata(self.pmcid)
+		self.metadata = {}
+		
+		for item in soup.find_all('item'):
+			
+			tag = item['name']
+			value = item.string
+			
+			if tag in self.metadata.keys():
+				if type(self.metadata[tag]) != list:
+					stored_value = self.metadata[tag]
+					del self.metadata[tag]
+					self.metadata.setdefault(tag, []).append(stored_value)	
+				self.metadata.setdefault(tag, []).append(value)
+			else:
+				self.metadata[tag] = value
+				
+		
+		return self.metadata
+
+
+
 class PMC():
 	
 	''' PubMed Central interface '''
@@ -125,6 +167,39 @@ class PMC():
 			
 		return results
 		
+		
+	def _get_metadata(self, pmcid):
+		
+		''' Get summary of the metadata from PubMed Central for a single PubMed Central id.
+		
+		Documentation: https://www.ncbi.nlm.nih.gov/pmc/tools/get-metadata/
+		
+		Arguments:
+		----------
+		pmcid:
+		- type: string
+		- description: a single PubMed Central identifier
+		
+		Returns:
+		--------
+		PMC server response
+		- type: bs4.BeautifulSoup object
+		- description: a summary of the paper's metadata
+		
+		'''
+		
+		if pmcid.startswith('PMC'):
+			pmcid = pmcid[3:]
+			
+		service_root = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pmc&id='
+		query = '{}{}&tool={}&email={}'.format(service_root, pmcid, self.tool, self.mail)
+		r = requests.get(query)
+		soup = BS(r.text, 'lxml')
+		
+		sleep(self._sleep_time/5)
+		
+		return soup
+
 		
 if __name__ == '__main__':
 	
