@@ -1,0 +1,6 @@
+name: citation_graph
+dependencies:
+- python=3.5
+- beautifulsoup4
+- requests
+- lxml
