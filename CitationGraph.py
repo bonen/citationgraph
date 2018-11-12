@@ -15,6 +15,8 @@ class PMC():
 		
 		self.tool = 'CitationGraph'
 		self.mail = mail
+		self._chunk_size = 200
+		self._sleep_time = 1
 
 
 	def convert(self, ids, to_idtype):
@@ -47,8 +49,8 @@ class PMC():
 		service_root = 'https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/?ids='
 		results = {}
 		
-		for i in range(0, len(ids), 200):
-			chunk = ids[i:i+200]
+		for i in range(0, len(ids), self._chunk_size):
+			chunk = ids[i:i+self._chunk_size]
 			query = '{}{}&tool={}&email={}'.format(service_root, ','.join(chunk), self.tool, self.mail)
 
 			r = requests.get(query)
@@ -58,7 +60,7 @@ class PMC():
 				query_id = record['requested-id']
 				result_id = record[to_idtype]
 				results[query_id] = result_id
-			sleep(1)
+			sleep(self._sleep_time)
 			
 		return results
 
@@ -98,8 +100,8 @@ class PMC():
 			
 		results = {}
 		
-		for i in range(0, len(ids), 200):
-			chunk = ids[i:i+200]
+		for i in range(0, len(ids), self._chunk_size):
+			chunk = ids[i:i+self._chunk_size]
 			query = '{}{}&tool={}&email={}'.format(service_root, '&id='.join(chunk), self.tool, self.mail)
 			
 			r = requests.get(query)
@@ -109,7 +111,7 @@ class PMC():
 				cited_id = linkset.find('idlist').find('id').contents[0]
 				citing_ids = [link.contents[0] for link in linkset.find('linksetdb').find_all('id')]
 				results[cited_id] = citing_ids
-			sleep(1)
+			sleep(self._sleep_time)
 			
 		return results
 		
