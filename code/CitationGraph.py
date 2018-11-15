@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from time import sleep
+from unidecode import unidecode
 
 import requests
-
 from bs4 import BeautifulSoup as BS
 
 
@@ -42,7 +42,10 @@ class Paper():
 		for item in soup.find_all('item'):
 			
 			tag = item['name']
-			value = item.string
+			try:
+				value = unidecode(item.string)
+			except AttributeError:
+				value = ''
 			
 			if tag in self.metadata.keys():
 				if type(self.metadata[tag]) != list:
@@ -101,6 +104,7 @@ class PMC():
 		service_root = 'https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/?ids='
 		results = {}
 		
+		print('Converting {} unique ids to {} format'.format(len(set(ids)), to_idtype))
 		for i in range(0, len(ids), self._chunk_size):
 			chunk = ids[i:i+self._chunk_size]
 			query = '{}{}&tool={}&email={}'.format(service_root, ','.join(chunk), self.tool, self.mail)
@@ -109,11 +113,21 @@ class PMC():
 			soup = BS(r.text, 'lxml')
 			records = soup.find_all('record')
 			for record in records:
-				query_id = record['requested-id']
-				result_id = record[to_idtype]
-				results[query_id] = result_id
+				try:
+					query_id = record['requested-id']
+					result_id = record[to_idtype]
+					results[query_id] = result_id
+				except KeyError:
+					print(query_id, record)
+				
+				
 			sleep(self._sleep_time)
 			
+		print('Succesfully converted {} ids.'.format(len(results.keys())))
+		if len(results.keys()) != len(ids):
+			print('{} ids were not converted!:\n{}'.format(len(set(ids).difference(set(results.keys()))),
+														   '\n'.join(set(ids).difference(set(results.keys())))))
+		
 		return results
 
 
@@ -161,7 +175,10 @@ class PMC():
 			soup = BS(r.text, 'lxml')
 			for linkset in soup.find_all('linkset'):
 				cited_id = linkset.find('idlist').find('id').contents[0]
-				citing_ids = [link.contents[0] for link in linkset.find('linksetdb').find_all('id')]
+				try:
+					citing_ids = [link.contents[0] for link in linkset.find('linksetdb').find_all('id')]
+				except:
+					cited_ids = []
 				results[cited_id] = citing_ids
 			sleep(self._sleep_time)
 			
@@ -204,18 +221,26 @@ class PMC():
 if __name__ == '__main__':
 	
 	mail =  # your e-mail adres here
-	
-	ids = ['PMC4364064', 'PMC5811185'] # list of pubmed central ids
 	pmc = PMC(mail) # create PubMed Central interface
+	
+	# read in example list of pmc ids
+	with open('../data/example_pmc_list.txt', 'r') as o:
+		ids = o.read().strip().split('\n')
 	
 	converted_ids = list(pmc.convert(ids, 'pmid').values()) # convert PubMed Central ids to PubMed IDs
 	
-	print(pmc.get_citations(converted_ids, how='citing')) # fetch papers citing the ids we provided
-	print(pmc.get_citations(converted_ids, how='cited_by')) # fetch papers cited by the ids we provided
-	
-	for paper_id in ids:
+	citing_papers = pmc.get_citations(converted_ids, how='citing') # fetch papers citing the ids we provided
+	print('Example:\nPaper: {} is cited by {} articles.'.format(list(citing_papers.keys())[0],
+															   len(citing_papers[list(citing_papers.keys())[0]])))
+	cited_papers = pmc.get_citations(converted_ids, how='cited_by') # fetch papers cited by the ids we provided
+	print('Example:\nPaper: {} cites {} articles.'.format(list(cited_papers.keys())[0],
+															   len(cited_papers[list(citing_papers.keys())[0]])))
+	for i, paper_id in enumerate(ids):
 		mypaper = Paper(paper_id) # create a representation of a paper
 		mypaper.fetch_metadata(pmc) # pass pmc interface to fetch the paper's metadata
-		print(mypaper.metadata['Title'])
-		print(mypaper.metadata['Author'])
-	
+		if i == 0:
+			print('Metadata for {}'.format(mypaper.pmcid))
+			for key, value in mypaper.metadata.items():
+				print('{}: {}'.format(key, value))
+		else:
+			break
