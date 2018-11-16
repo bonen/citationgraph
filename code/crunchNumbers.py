@@ -1,9 +1,14 @@
 from CitationGraph import *
 from pickle import dump
+from time import time
+
+tstart = time()
+
 
 def unnest(x):
 	""" returns un-nested version of level 1 nested list x."""
 	return [e for sublist in x for e in sublist]
+
 
 def visualize_paper(paper_id):
 	print('Metadata for {}'.format(mypaper.pmcid))
@@ -32,15 +37,19 @@ pmc = PMC(mail)  # create PubMed Central interface
 # read in example list of pmc ids
 # FP_input_ids = '../data/example_pmc_list.txt'
 # FP_input_ids = '../data/example_pmc_list_short.txt'
-FP_input_ids = '../data/example_pmc_list_short.txt'
+dirtype = 'data_2_ids'
+# dirtype = 'data'
+FN_input_ids = 'epigenomics_2'
+# FN_input_ids = 'epigenomics'
+FP_input_ids = '../'+dirtype+'/'+FN_input_ids+'.txt'
 with open(FP_input_ids, 'r') as o:
 	input_ids = o.read().strip().split('\n')
 
 converted_ids = list(pmc.convert(input_ids, 'pmid').values())  # convert PubMed Central ids to PubMed IDs
 
-citing_papers = pmc.get_citations(converted_ids, how='citing')  # fetch papers citing the ids we provided
-print('Example:\nPaper: {} is cited by {} articles.'.format(list(citing_papers.keys())[0],
-															len(citing_papers[list(citing_papers.keys())[0]])))
+# citing_papers = pmc.get_citations(converted_ids, how='citing')  # fetch papers citing the ids we provided
+# print('Example:\nPaper: {} is cited by {} articles.'.format(list(citing_papers.keys())[0],
+# 															len(citing_papers[list(citing_papers.keys())[0]])))
 cited_papers = pmc.get_citations(converted_ids, how='cited_by')  # fetch papers cited by the ids we provided
 # print('Example:\nPaper: {} cites {} articles.'.format(list(cited_papers.keys())[0],
 # 													  len(cited_papers[list(citing_papers.keys())[0]])))
@@ -53,4 +62,5 @@ for PM_id, PMC_id in zip(converted_ids, input_ids):
 	# visualize_paper(paper_id)
 	linkedAuthors.append(linked_authors(metadata, cited_papers, PM_id, PMC_id))
 print(linkedAuthors)
-dump(linkedAuthors, open('authors.pkl', 'wb+'))
+dump(linkedAuthors, open('authors_'+FN_input_ids+'.pkl', 'wb+'))
+print(time()-tstart)
