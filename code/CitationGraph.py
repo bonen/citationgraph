@@ -178,7 +178,7 @@ class PMC():
 				try:
 					citing_ids = [link.contents[0] for link in linkset.find('linksetdb').find_all('id')]
 				except:
-					cited_ids = []
+					citing_ids = []
 				results[cited_id] = citing_ids
 			sleep(self._sleep_time)
 			
