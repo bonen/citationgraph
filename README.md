@@ -40,5 +40,12 @@ The included python script can be used to convert paper's IDs (from PubMed, PubM
 
 # Papers citing and cited by our paper of interest
 # Article metadata available through NCBI's esummary
-
+ can be of use
 See //CitationGraph.py// for an example on how to use the script.
+
+
+# R Google Scholar package
+
+Maybe this can be of use in your project as well!
+
+https://cran.r-project.org/web/packages/scholar/vignettes/scholar.html
