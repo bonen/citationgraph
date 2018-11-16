@@ -220,7 +220,7 @@ class PMC():
 		
 if __name__ == '__main__':
 	
-	mail =  # your e-mail adres here
+	mail = None # your e-mail adres here
 	pmc = PMC(mail) # create PubMed Central interface
 	
 	# read in example list of pmc ids
