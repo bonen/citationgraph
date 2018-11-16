@@ -1,5 +1,6 @@
 from CitationGraph import *
-from pickle import dump
+from pickle import dump, dumps
+# from json import dump
 from time import time
 
 tstart = time()
@@ -37,10 +38,10 @@ pmc = PMC(mail)  # create PubMed Central interface
 # read in example list of pmc ids
 # FP_input_ids = '../data/example_pmc_list.txt'
 # FP_input_ids = '../data/example_pmc_list_short.txt'
-dirtype = 'data_2_ids'
-# dirtype = 'data'
-FN_input_ids = 'epigenomics_2'
-# FN_input_ids = 'epigenomics'
+# dirtype = 'data_2_ids'
+dirtype = 'data_15_ids'
+# FN_input_ids = 'epigenomics_2'
+FN_input_ids = 'epigenomics_15'
 FP_input_ids = '../'+dirtype+'/'+FN_input_ids+'.txt'
 with open(FP_input_ids, 'r') as o:
 	input_ids = o.read().strip().split('\n')
@@ -62,5 +63,6 @@ for PM_id, PMC_id in zip(converted_ids, input_ids):
 	# visualize_paper(paper_id)
 	linkedAuthors.append(linked_authors(metadata, cited_papers, PM_id, PMC_id))
 print(linkedAuthors)
-dump(linkedAuthors, open('authors_'+FN_input_ids+'.pkl', 'wb+'))
+# dumps(linkedAuthors, open('authors_'+FN_input_ids+'.pkl', 'wb'))
+dump(linkedAuthors, open('authors_'+FN_input_ids+'.pkl', 'wb'))
 print(time()-tstart)
