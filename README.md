@@ -11,6 +11,21 @@ Make a new conda environment that uses python 3.5 with the required dependencies
 conda env create --file citation_graph_env.yml
 ```
 
+You can activate this environment with:
+
+```
+activate citationgraph
+```
+
+or 
+
+```
+source activate citationgraph
+```
+
+depending on your OS.
+
+
 * Dependencies
 
 ** python 3
