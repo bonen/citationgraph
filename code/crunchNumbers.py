@@ -20,7 +20,10 @@ def visualize_paper(paper_id):
 
 def linked_authors(metadata, cited, this_PM_id, this_PMC_id):
 	L_authors_by_level = []
-	L_authors_by_level.append(metadata[this_PMC_id]['Author'])
+	try:
+		L_authors_by_level.append(metadata[this_PMC_id]['Author'])
+	except KeyError:
+		raise KeyError("referencing paper", this_PMC_id, "has no Author")
 	L_authors_by_level.append([])
 	this_cited = cited[this_PM_id]  # papers cited by the ids we provided
 	this_cited_converted = list(pmc.convert(this_cited, 'pmcid').values())
