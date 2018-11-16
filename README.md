@@ -23,9 +23,7 @@ or
 source activate citationgraph
 ```
 
-```
-conda install networkx plotly notebook nb_conda 
-```
+
 
 depending on your OS.
 
@@ -53,3 +51,11 @@ See //CitationGraph.py// for an example on how to use the script.
 Maybe this can be of use in your project as well!
 
 https://cran.r-project.org/web/packages/scholar/vignettes/scholar.html
+
+# Added by team1
+
+Install libraries and notebook
+
+```
+conda install networkx plotly notebook nb_conda 
+```
