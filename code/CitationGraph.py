@@ -220,11 +220,11 @@ class PMC():
 		
 if __name__ == '__main__':
 	
-	mail =  # your e-mail adres here
+	mail = 'koen.bonenkamp@gmail.com' # your e-mail adres here
 	pmc = PMC(mail) # create PubMed Central interface
 	
 	# read in example list of pmc ids
-	with open('../data/example_pmc_list.txt', 'r') as o:
+	with open('data/example_pmc_list.txt', 'r') as o:
 		ids = o.read().strip().split('\n')
 	
 	converted_ids = list(pmc.convert(ids, 'pmid').values()) # convert PubMed Central ids to PubMed IDs

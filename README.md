@@ -23,6 +23,10 @@ or
 source activate citationgraph
 ```
 
+```
+conda install networkx plotly notebook nb_conda 
+```
+
 depending on your OS.
 
 
